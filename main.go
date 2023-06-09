@@ -5,6 +5,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/honeycombio/honeycomb-opentelemetry-go"
+	"github.com/honeycombio/otel-config-go/otelconfig"
+
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -12,8 +17,27 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", handler)
+	// enable multi-span attributes
+	bsp := honeycomb.NewBaggageSpanProcessor()
+
+	// use honeycomb distro to setup OpenTelemetry SDK
+	otelShutdown, err := otelconfig.ConfigureOpenTelemetry(
+		otelconfig.WithSpanProcessor(bsp),
+	)
+	if err != nil {
+		log.Fatalf("error setting up OTel SDK - %e", err)
+	}
+	defer otelShutdown()
+
+	createHandler()
+
 	log.Fatal(http.ListenAndServe(determinePort(), nil))
+}
+
+func createHandler() {
+	handler := http.HandlerFunc(handler)
+	wrappedHandler := otelhttp.NewHandler(handler, "greet")
+	http.Handle("/", wrappedHandler)
 }
 
 func determinePort() string {
