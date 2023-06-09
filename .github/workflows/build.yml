@@ -1,9 +1,6 @@
 name: GoLang Build and Push to GitHub Packages
 
-on:
-  push:
-    branches:
-      - main
+on: workflow_dispatch
 
 jobs:
   build-and-push:
