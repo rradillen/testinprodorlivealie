@@ -32,9 +32,9 @@ jobs:
           -X GET \
           -H "X-Honeycomb-Team: ${{ secrets.HONEYCOMB_API_KEY}}" | yq '.data.results[0].data.COUNT | "failure-request-count="+.' >> "$GITHUB_OUTPUT"
       - run: |
-          echo "Failure count was: ${{ steps.count-failed-requests.output.failure-request-count }}"
+          echo "Failure count was: ${{ steps.count-failed-requests.outputs.failure-request-count }}"
       - name: Failure inspection (zero tolerance)
-        if: steps.count-failed-requests.output.failure-request-count > 0
+        if: steps.count-failed-requests.outputs.failure-request-count > 0
         run: |
-            echo "::error failure_request_count=${{ steps.count-failed-requests.output.failure-request-count }}::{message}"
+            echo "::error failure_request_count=${{ steps.count-failed-requests.outputs.failure-request-count }}::{message}"
             exit 1
