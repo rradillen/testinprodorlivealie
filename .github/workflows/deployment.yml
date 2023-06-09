@@ -23,11 +23,13 @@ jobs:
     steps:
       - run: |
           curl https://api.honeycomb.io/1/query_results/testinprodorlivealie \
+          -D- \
           -X POST \
           -H "X-Honeycomb-Team: ${{ secrets.HONEYCOMB_API_KEY }}" \
           -d '{"query_id":"5vQuRshh5wN"}' | tee - | yq '.id | "QUERY_RESULT_ID="+.' >> "$GITHUB_ENV"
       - run: |
           curl https://api.honeycomb.io/1/query_results/testinprodorlivealie/${QUERY_RESULT_ID} \
+          -D- \
           -X GET \
           -H "X-Honeycomb-Team: ${{ secrets.HONEYCOMB_API_KEY}}" | tee - | yq '.data.results[0].data.COUNT | "FAILURE_REQUEST_COUNT="+.' >> "$GITHUB_ENV"
       - name: Failure inspection (zero tolerance)
