@@ -10,7 +10,7 @@ jobs:
     name: Deploy to staging
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only --ha=false
         env:
@@ -25,12 +25,12 @@ jobs:
           curl https://api.honeycomb.io/1/query_results/testinprodorlivealie \
           -X POST \
           -H "X-Honeycomb-Team: ${{ secrets.HONEYCOMB_API_KEY }}" \
-          -d '{"query_id":"5vQuRshh5wN"}' | tee /dev/stdouts | yq '.id | "QUERY_RESULT_ID="+.' >> "$GITHUB_ENV"
+          -d '{"query_id":"5vQuRshh5wN"}' | tee /dev/stdout | yq '.id | "QUERY_RESULT_ID="+.' >> "$GITHUB_ENV"
       - id: count-failed-requests
         run: |
           curl https://api.honeycomb.io/1/query_results/testinprodorlivealie/${QUERY_RESULT_ID} \
           -X GET \
-          -H "X-Honeycomb-Team: ${{ secrets.HONEYCOMB_API_KEY}}" | tee /dev/stdouts | yq '.data.results[0].data.COUNT | "failure-request-count="+.' >> "$GITHUB_OUTPUT"
+          -H "X-Honeycomb-Team: ${{ secrets.HONEYCOMB_API_KEY}}" | tee /dev/stdout | yq '.data.results[0].data.COUNT | "failure-request-count="+.' >> "$GITHUB_OUTPUT"
       - name: Failure inspection (zero tolerance)
         if: steps.count-failed-requests.output.failure-request-count > 0
         run: |
