@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 
@@ -13,7 +14,12 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
+	if rand.Intn(100) >= 50 {
+		w.WriteHeader(500)
+	} else {
+		fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
+	}
+
 }
 
 func main() {
