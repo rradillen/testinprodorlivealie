@@ -23,16 +23,14 @@ jobs:
     steps:
       - run: |
           curl https://api.honeycomb.io/1/query_results/testinprodorlivealie \
-          -D- \
           -X POST \
           -H "X-Honeycomb-Team: ${{ secrets.HONEYCOMB_API_KEY }}" \
-          -d '{"query_id":"5vQuRshh5wN"}' | tee - | yq '.id | "QUERY_RESULT_ID="+.' >> "$GITHUB_ENV"
+          -d '{"query_id":"5vQuRshh5wN"}' | tee /dev/tty | yq '.id | "QUERY_RESULT_ID="+.' >> "$GITHUB_ENV"
       - id: count-failed-requests
         run: |
           curl https://api.honeycomb.io/1/query_results/testinprodorlivealie/${QUERY_RESULT_ID} \
-          -D- \
           -X GET \
-          -H "X-Honeycomb-Team: ${{ secrets.HONEYCOMB_API_KEY}}" | tee - | yq '.data.results[0].data.COUNT | "failure-request-count="+.' >> "$GITHUB_OUTPUT"
+          -H "X-Honeycomb-Team: ${{ secrets.HONEYCOMB_API_KEY}}" | tee /dev/tty | yq '.data.results[0].data.COUNT | "failure-request-count="+.' >> "$GITHUB_OUTPUT"
       - name: Failure inspection (zero tolerance)
         if: steps.count-failed-requests.output.failure-request-count > 0
         run: |
