@@ -25,10 +25,10 @@ jobs:
         uses: docker/setup-docker@v2
 
       - name: Build Docker image
-        run: docker build -t docker.pkg.github.com/${{ GITHUB_REPOSITORY }}/testinprodorlivealie:latest .
+        run: docker build -t docker.pkg.github.com/${{ github.repository }}/testinprodorlivealie:latest .
 
       - name: Log in to GitHub Packages
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
       - name: Push to GitHub Packages
-        run: docker push docker.pkg.github.com/${{ GITHUB_REPOSITORY }}/testinprodorlivealie:latest
+        run: docker push docker.pkg.github.com/${{ github.repository }}/testinprodorlivealie:latest
