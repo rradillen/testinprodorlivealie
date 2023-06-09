@@ -29,7 +29,7 @@ jobs:
           -X GET \
           -H "X-Honeycomb-Team: ${{ secrets.HONEYCOMB_API_KEY}}" | yq '.data.results.data.COUNT | "FAILURE_REQUEST_COUNT="+.' >> "$GITHUB_ENV"
       - name: Failure inspection (zero tolerance)
-        if: ${{ FAILURE_REQUEST_COUNT }} > 0
+        if: ${{ env.FAILURE_REQUEST_COUNT }} > 0
         run: |
-            echo "::error success_request_count=${{ SUCCESS_REQUEST_COUNT }}::{message}"
+            echo "::error failure_request_count=${{ env.FAILURE_REQUEST_COUNT }}::{message}"
             exit 1
