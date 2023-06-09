@@ -14,4 +14,4 @@ primary_region = "ams"
   min_machines_running = 0
 
 [env]
-  OTEL_SERVICE_NAME=testinprodorlivealie
+  OTEL_SERVICE_NAME="testinprodorlivealie"
