@@ -21,9 +21,6 @@ jobs:
       - name: Build
         run: go build -o testinprodorlivealie
 
-      - name: Set up Docker
-        uses: docker/setup-docker@v2
-
       - name: Build Docker image
         run: docker build -t docker.pkg.github.com/${{ github.repository }}/testinprodorlivealie:latest .
 
