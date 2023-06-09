@@ -4,7 +4,8 @@ on:
     branches:
       - main
 jobs:
-  deploy:
+  deploy-staging:
+    environment: staging
     name: Deploy to non-prd
     runs-on: ubuntu-latest
     steps:
