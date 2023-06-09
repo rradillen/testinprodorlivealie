@@ -1,5 +1,5 @@
 # Start from a GoLang base image
-FROM golang:1.20-alpine
+FROM golang:1.20-alpine AS build
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -15,6 +15,11 @@ COPY . .
 
 # Build the Go application
 RUN go build -o testinprodorlivealie
+
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /app/
+COPY --from=build /app/testinprodorlivealie ./
 
 # Expose a port (if your application listens on a specific port)
 EXPOSE 8999
