@@ -28,7 +28,7 @@ jobs:
           -d '{"query_id":"5vQuRshh5wN"}' | yq '.id | "QUERY_RESULT_ID="+.' >> "$GITHUB_ENV"
       - id: count-failed-requests
         run: |
-          curl https://api.honeycomb.io/1/query_results/testinprodorlivealie/${QUERY_RESULT_ID} \
+          sleep 10; curl https://api.honeycomb.io/1/query_results/testinprodorlivealie/${QUERY_RESULT_ID} \
           -X GET \
           -H "X-Honeycomb-Team: ${{ secrets.HONEYCOMB_API_KEY}}" | yq '.data.results[0].data.COUNT | "failure-request-count="+.' >> "$GITHUB_OUTPUT"
       - run: |
